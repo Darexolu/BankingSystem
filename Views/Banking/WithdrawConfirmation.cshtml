@@ -1,0 +1,9 @@
+﻿@model BankingSystem.Models.ViewModel.WithdrawConfirmationViewModel
+
+<h2>Withdrawal Confirmation</h2>
+
+<p>Your withdrawal of @Model.WithdrawnAmount has been processed.</p>
+
+<p>Your new balance is: @Model.NewBalance</p>
+
+<a asp-controller="Banking" asp-action="CheckBalance">Check Balance</a>

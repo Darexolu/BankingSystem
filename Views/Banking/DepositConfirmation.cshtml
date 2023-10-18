@@ -1,0 +1,10 @@
+﻿@model BankingSystem.Models.ViewModel.DepositConfirmationViewModel
+
+<h2>Deposit Confirmation</h2>
+
+<p>Your deposit was successful!</p>
+<p>Amount deposited: @Model.AmountDeposited</p>
+<p>Transaction Date: @DateTime.Now</p>
+<p><a asp-controller="Banking" asp-action="Deposit">Make Another Deposit</a></p>
+<p><a asp-controller="Banking" asp-action="CheckBalance">Check Balance</a></p>
+

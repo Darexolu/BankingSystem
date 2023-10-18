@@ -1,0 +1,15 @@
+﻿@model BankingSystem.Models.ViewModel.WithdrawViewModel
+
+<h2>Withdraw</h2>
+
+<p>Your Current Balance: @Model.Balance</p>
+
+<form asp-action="Withdraw" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+<div class="form-group">
+        <label asp-for="WithdrawAmount" for="withdrawalamount">Amount to Withdraw</label>
+        <input asp-for="WithdrawAmount" step="0.01" id="withdrawalamount" type="number" name="withdrawalamount" class="form-control" required />
+        <span asp-validation-for="WithdrawAmount" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Withdraw</button>
+</form>
