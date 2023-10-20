@@ -188,25 +188,35 @@ namespace BankingSystem.Controllers
             
             
         }
-        public async Task<IActionResult> Index(string userId)
+        public IActionResult Index()
         {
-            
-
-            if (userId == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _dbContext.ApplicationUsers
-                .Include(u => u.Transactions) // Include the user's transactions
-                .FirstOrDefaultAsync(u => u.Id == userId);
+            // Retrieve the currently authenticated user
+            var user = _userManager.GetUserAsync(User).Result;
 
             if (user == null)
             {
-                return NotFound();
+                // Handle the case where the user is not found or not authenticated
+                return Redirect("/Identity/Account/Login");
             }
 
-            return View(user);
+            // Retrieve the user's account balance (you should replace this with your own logic)
+            decimal balance = user.Balance;
+
+            // Retrieve the user's recent transactions (you should replace this with your own logic)
+            List<Transaction> recentTransactions = _dbContext.Transactions
+                .Where(t => t.UserId == user.Id)
+                .OrderByDescending(t => t.Date)
+                .Take(10) // You can adjust the number of recent transactions to display
+                .ToList();
+            // Create an IndexViewModel to pass data to the view
+            var viewModel = new IndexViewModel
+            {
+                //UserName = user.UserName,
+                Balance = balance,
+                RecentTransactions = recentTransactions
+            };
+
+            return View(viewModel);
         }
     }
 }
