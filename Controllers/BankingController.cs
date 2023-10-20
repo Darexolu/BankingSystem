@@ -84,9 +84,9 @@ namespace BankingSystem.Controllers
 
         // Withdraw action
         [HttpGet]
-        public async Task<IActionResult> Withdraw(string id)
+        public async Task<IActionResult> Withdraw()
         {
-            var user = await _userManager.GetUserAsync(User);
+            ApplicationUser user = await _userManager.GetUserAsync(User);
 
             if (user == null)
             {
@@ -95,6 +95,7 @@ namespace BankingSystem.Controllers
 
             var viewModel = new WithdrawViewModel
             {
+                UserId = user.Id,
                 Balance = user.Balance
             };
 
@@ -103,38 +104,42 @@ namespace BankingSystem.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Withdraw(WithdrawViewModel viewModel)
+        public async Task<IActionResult> Withdraw(string userId,decimal WithdrawAmount, WithdrawViewModel viewModel)
         {
             // Retrieve the user
-            var user = await _userManager.GetUserAsync(User);
+            ApplicationUser user = await _userManager.FindByIdAsync(userId);
+
 
             if (user == null)
             {
                 // Handle the case where the user is not found
-                return Redirect("/Identity/Account/Login");
+                return NotFound();
             }
 
             // Validate the withdrawal amount
             if (ModelState.IsValid)
             {
                 // Ensure the withdrawal amount is valid
-                if (viewModel.WithdrawAmount <= 0 || viewModel.WithdrawAmount > user.Balance)
+                if (WithdrawAmount <= 0 )
                 {
-                    ModelState.AddModelError("viewModel.WithdrawAmount", "Invalid withdrawal amount.");
-                    
+                    ModelState.AddModelError("WithdrawAmount", "Invalid withdrawal amount.");                 
 
+                }
+                else if( WithdrawAmount > user.Balance)
+                {
+                    ModelState.AddModelError("WithdrawAmount", "Insufficient Balance");
                 }
                 else
                 {
                     // Deduct the withdrawal amount from the user's balance
-                    user.Balance -= viewModel.WithdrawAmount;
+                    user.Balance -= WithdrawAmount;
 
 
 
                     var transaction = new Transaction
                     {
                         UserId = user.Id,
-                        Amount = -viewModel.WithdrawAmount, // Negative amount for withdrawals
+                        Amount = -WithdrawAmount, // Negative amount for withdrawals
                         Date = DateTime.Now,
                         Type = TransactionType.Withdraw
                     };
@@ -145,7 +150,7 @@ namespace BankingSystem.Controllers
                     _dbContext.SaveChanges();
                     var confirmationViewModel = new WithdrawConfirmationViewModel
                     {
-                        WithdrawnAmount = viewModel.WithdrawAmount,
+                        WithdrawnAmount = WithdrawAmount,
                         NewBalance = user.Balance
                     };
 
