@@ -1,0 +1,28 @@
+﻿@model TransferViewModel
+
+<h2>Fund Transfer</h2>
+
+@using (Html.BeginForm("Transfer", "Banking", FormMethod.Post))
+{
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="SourceAccountNumber">Source Account Number:</label>
+        <input asp-for="SourceAccountNumber" class="form-control" />
+        <span asp-validation-for="SourceAccountNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DestinationAccountNumber">Destination Account Number:</label>
+        <input asp-for="DestinationAccountNumber" class="form-control" />
+        <span asp-validation-for="DestinationAccountNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TransferAmount">Transfer Amount:</label>
+        <input asp-for="TransferAmount" class="form-control" />
+        <span asp-validation-for="TransferAmount" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Transfer</button>
+}

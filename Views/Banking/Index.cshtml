@@ -1,9 +1,10 @@
 ﻿@model IndexViewModel
 
-<h2>Welcome@*, @Model.UserName!*@</h2>
+<h2>Welcome, <span class="text-danger">@Model.FirstName @Model.LastName!</span></h2>
 
 <p>Your Account Summary:</p>
 <ul>
+    <li>Account Number: @Model.AccountNumber</li>
     <li>Account Balance: @Model.Balance</li>
 </ul>
 
@@ -21,7 +22,7 @@
         {
             <tr>
                 <td>@transaction.Date</td>
-                <td>@transaction.Type</td>
+                 <td>@transaction.TransactionTypeString</td>
                 <td>@transaction.Amount</td>
             </tr>
         }

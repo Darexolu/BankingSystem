@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using BankingSystem.Data;
 
 namespace BankingSystem.Areas.Identity.Pages.Account
 {
@@ -30,13 +31,15 @@ namespace BankingSystem.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly BankingDbContext _dbContext;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            BankingDbContext dbContext)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +47,7 @@ namespace BankingSystem.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -103,12 +107,36 @@ namespace BankingSystem.Areas.Identity.Pages.Account
             public string LastName { get; set; }
             public string Address { get; set; }
             public decimal Balance { get; set; }
-            
+            public string AccountNumber { get; set; }
 
 
         }
 
+        public string GenerateAccountNumber()
+        {
+            const int accountNumberLength = 10; // Adjust the length as needed
+            const string accountNumberPrefix = "1004"; // You can customize the prefix
 
+            // Create a random number generator
+            Random random = new Random();
+
+            // Generate a random account number until a unique one is found
+            string accountNumber;
+            bool isUnique;
+
+            do
+            {
+                // Generate a random number part of the account number
+                int randomNumberPart = random.Next(100000, 999999); // Generate a 6-digit number
+
+                accountNumber = $"{accountNumberPrefix}-{randomNumberPart}";
+
+                // Check if the generated account number is unique in the database
+                isUnique = !_dbContext.ApplicationUsers.Any(u => u.AccountNumber == accountNumber);
+            } while (!isUnique);
+
+            return accountNumber;
+        }
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
@@ -130,6 +158,7 @@ namespace BankingSystem.Areas.Identity.Pages.Account
                 user.LastName = Input.LastName;
                 user.Address = Input.Address;
                 user.Balance = Input.Balance;
+                user.AccountNumber = GenerateAccountNumber();
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
@@ -193,5 +222,6 @@ namespace BankingSystem.Areas.Identity.Pages.Account
             }
             return (IUserEmailStore<ApplicationUser>)_userStore;
         }
-    }
+        
+   }
 }

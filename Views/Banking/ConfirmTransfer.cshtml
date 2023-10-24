@@ -1,0 +1,13 @@
+﻿@model ConfirmTransferViewModel
+
+<h2>Transfer Confirmation</h2>
+
+<p>Your transfer has been successfully completed.</p>
+<p>Source Account: @Model.SourceAccountNumber</p>
+<p>Destination Account: @Model.DestinationAccountNumber</p>
+<p>Transfer Amount: @Model.TransferAmount</p>
+
+<p>Sender Transaction Type: Transfer Out</p>
+<p>Recipient Transaction Type: Receival</p>
+
+<p><a asp-action="Index">Return to Account Summary</a></p>

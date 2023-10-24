@@ -3,14 +3,14 @@
 <h2>Withdraw</h2>
 
     <div asp-validation-summary="All" class="text-danger"></div>
-
-<p>Your Current Balance: @Model.Balance</p>
+<h3>Hello <span class="text-danger">@Model.FirstName!</span></h3>
+<p>Current Balance: @Model.Balance</p>
 
 <form asp-action="Withdraw" method="post">
    <div class="form-group">
+                        <input type="hidden" name="FirstName" value="@Model.FirstName" />
                  <input type="hidden" name="userId" value="@Model.UserId" />
         <input type="hidden" name="Balance" value="@Model.Balance" />
-
         <label  for="withdrawalamount">Amount to Withdraw</label>
         <input type="number" step="0.01" id="withdrawalamount" name="WithdrawAmount" class="form-control" required />
         <span asp-validation-for="WithdrawAmount" class="text-danger"></span>
