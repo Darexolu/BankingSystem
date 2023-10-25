@@ -258,9 +258,23 @@ namespace BankingSystem.Controllers
         }
         public IActionResult Transfer()
         {
-            var transferViewModel = new TransferViewModel(); // Initialize an empty view model
+            //var transferViewModel = new TransferViewModel(); // Initialize an empty view model
 
-            return View(transferViewModel);
+            //return View(transferViewModel);
+            var user = _userManager.GetUserAsync(User).Result;
+
+            if (user == null)
+            {
+                // Handle the case where the user is not found or not authenticated
+                return Redirect("/Identity/Account/Login");
+            }
+            var viewModel = new TransferViewModel
+            {
+                SourceAccountNumber = user.AccountNumber,
+                SourceName = $"{user.FirstName} {user.LastName}"
+
+            };
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -306,6 +320,8 @@ namespace BankingSystem.Controllers
                         {
                             SourceAccountNumber = transferViewModel.SourceAccountNumber,
                             DestinationAccountNumber = transferViewModel.DestinationAccountNumber,
+                            SourceName = transferViewModel.SourceName,
+                            ReceiverName = transferViewModel.ReceiverName,
                             TransferAmount = transferViewModel.TransferAmount
                         };
 
@@ -332,6 +348,26 @@ namespace BankingSystem.Controllers
         public IActionResult ConfirmTransfer(ConfirmTransferViewModel confirmViewModel)
         {
             return View(confirmViewModel);
+        }
+
+        [HttpGet]
+        [Route("Banking/GetReceiverName/{destinationAccountNumber}")]
+        public JsonResult GetReceiverName(string destinationAccountNumber)
+        {
+            // Assuming you have an Entity Framework DbContext
+            var dbContext = _dbContext;
+            // Attempt to retrieve the user with the given destination account number
+            var receiverUser = dbContext.ApplicationUsers.SingleOrDefault(u => u.AccountNumber == destinationAccountNumber);
+
+                if (receiverUser != null)
+                {
+                    string receiverName = $"{receiverUser.FirstName} {receiverUser.LastName}";
+                    return Json(receiverName); // Return the receiver's name as JSON
+                }
+
+
+            // If the destination account number is not found or the user doesn't exist, return an empty response or an appropriate message.
+            return Json(null);
         }
     }
     }

@@ -8,14 +8,21 @@
 
     <div class="form-group">
         <label asp-for="SourceAccountNumber">Source Account Number:</label>
-        <input asp-for="SourceAccountNumber" class="form-control" />
+        <input asp-for="SourceAccountNumber" class="form-control" readonly />
         <span asp-validation-for="SourceAccountNumber" class="text-danger"></span>
     </div>
-
     <div class="form-group">
-        <label asp-for="DestinationAccountNumber">Destination Account Number:</label>
-        <input asp-for="DestinationAccountNumber" class="form-control" />
+        <label for="SourceName">Sender's Full Name</label>
+        <input asp-for="SourceName" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="DestinationAccountNumber">Receiver's Account Number:</label>
+        <input asp-for="DestinationAccountNumber" class="form-control" id="destinationAccountNumber" />
         <span asp-validation-for="DestinationAccountNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="ReceiverName">Receiver's Full Name</label>
+        <input asp-for="ReceiverName" class="form-control" readonly id="receiverName" />
     </div>
 
     <div class="form-group">
@@ -26,3 +33,13 @@
 
     <button type="submit" class="btn btn-primary">Transfer</button>
 }
+<script>
+    document.getElementById('destinationAccountNumber').addEventListener('input', function() {
+        var destinationAccountNumber = this.value;
+
+        // Use an AJAX request to fetch the receiver's name based on the destination account number
+        $.get(`/Banking/GetReceiverName/${destinationAccountNumber}`, function(data) {
+            document.getElementById('receiverName').value = data;
+        });
+    });
+</script>
