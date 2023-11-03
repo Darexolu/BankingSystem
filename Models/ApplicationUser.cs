@@ -13,6 +13,10 @@ namespace BankingSystem.Models
         public string AccountNumber { get; set; }
         public string? Address { get; set; }
         /*public string? UserName { get; set; }*/ /*{ get => base.UserName; set => base.UserName = value; }*/
+        
+        public string? Pin { get; set; }
+
+        public string? PinHash { get; set; } // Store the hashed PIN
         public ApplicationUser() : base()
         {
             // Initialize any custom properties or set default values

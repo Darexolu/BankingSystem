@@ -121,6 +121,13 @@ namespace BankingSystem.Controllers
             // Validate the withdrawal amount
             if (ModelState.IsValid)
             {
+                bool isPinValid = BCrypt.Net.BCrypt.Verify(viewModel.PIN, user.PinHash);
+
+                if (!isPinValid)
+                {
+                    ModelState.AddModelError("PIN", "Invalid PIN.");
+                    return View(viewModel);
+                }
                 // Ensure the withdrawal amount is valid
                 if (WithdrawAmount <= 0)
                 {

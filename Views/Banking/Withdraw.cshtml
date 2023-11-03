@@ -15,5 +15,10 @@
         <input type="number" step="0.01" id="withdrawalamount" name="WithdrawAmount" class="form-control" required />
         <span asp-validation-for="WithdrawAmount" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        <label asp-for="PIN" class="control-label"></label>
+        <input asp-for="PIN" class="form-control" type="password" autocomplete="new-password" maxlength="4" required />
+        <span asp-validation-for="PIN" class="text-danger"></span>
+    </div>
     <button type="submit" class="btn btn-primary">Withdraw</button>
 </form>

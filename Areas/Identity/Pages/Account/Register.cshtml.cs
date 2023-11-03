@@ -112,7 +112,9 @@ namespace BankingSystem.Areas.Identity.Pages.Account
             public string Address { get; set; }
             public decimal Balance { get; set; }
             public string AccountNumber { get; set; }
-           
+            public string Pin { get; set; }
+            public string PinHash { get; set; }
+
 
         }
        
@@ -165,6 +167,14 @@ namespace BankingSystem.Areas.Identity.Pages.Account
                 user.Address = Input.Address;
                 user.Balance = Input.Balance;
                 user.AccountNumber = GenerateAccountNumber();
+               
+
+
+                // Securely hash the PIN
+                string hashedPIN = BCrypt.Net.BCrypt.HashPassword(Input.Pin);
+
+                // Assign the hashed PIN to the user
+                user.PinHash = hashedPIN;
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
