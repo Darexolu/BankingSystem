@@ -5,7 +5,7 @@
 namespace BankingSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class propconfamtrans : Migration
+    public partial class isadmin : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

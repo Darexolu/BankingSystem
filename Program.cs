@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using Microsoft.AspNetCore.Identity;
 using BankingSystem.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BankingSystem
 {
@@ -15,9 +16,9 @@ namespace BankingSystem
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<BankingDbContext>(options =>
-        options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-                        builder.Services.AddDefaultIdentity<ApplicationUser>()
+                        builder.Services.AddIdentity<ApplicationUser,IdentityRole>()
                 .AddEntityFrameworkStores<BankingDbContext>().AddDefaultUI().AddDefaultTokenProviders();
 
 

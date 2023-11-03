@@ -21,11 +21,13 @@ namespace BankingSystem.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
             _logger = logger;
         }
 
@@ -83,15 +85,17 @@ namespace BankingSystem.Areas.Identity.Pages.Account
             /// </summary>
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
-        }
+            
 
+        }
+        public bool IsAdminUser { get; set; }
         public async Task OnGetAsync(string returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
-
+            
             returnUrl ??= Url.Content("~/");
 
             // Clear the existing external cookie to ensure a clean login process
@@ -100,6 +104,7 @@ namespace BankingSystem.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             ReturnUrl = returnUrl;
+            
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -110,6 +115,23 @@ namespace BankingSystem.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                if (Input.Email?.StartsWith("admin", StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    // This is the admin login. Check for a predefined admin email and password.
+                    string adminEmail = "admin@example.com";
+                    string adminPassword = "adminPassword"; // Customize as needed
+
+                    if (Input.Email == adminEmail && Input.Password == adminPassword)
+                    {
+                        // Admin login successful.
+                        // Perform any admin-specific actions or set roles here.
+                        return RedirectToAction("Admin", "Admin");
+                    }
+                }
+
+                // If admin login fails, you can handle it here.
+            
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);

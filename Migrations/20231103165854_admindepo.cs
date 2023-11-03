@@ -5,7 +5,7 @@
 namespace BankingSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class newViewModels : Migration
+    public partial class admindepo : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

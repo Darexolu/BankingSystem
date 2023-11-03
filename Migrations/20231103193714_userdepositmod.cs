@@ -5,7 +5,7 @@
 namespace BankingSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class depositViewmODEL : Migration
+    public partial class userdepositmod : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

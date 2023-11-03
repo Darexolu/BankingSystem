@@ -5,15 +5,15 @@
 namespace BankingSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class accountNumber : Migration
+    public partial class adminame : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "AccountNumber",
+                name: "AdminName",
                 table: "AspNetUsers",
-                type: "TEXT",
+                type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
         }
@@ -22,7 +22,7 @@ namespace BankingSystem.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "AccountNumber",
+                name: "AdminName",
                 table: "AspNetUsers");
         }
     }

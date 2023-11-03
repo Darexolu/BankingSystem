@@ -5,7 +5,7 @@
 namespace BankingSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class lastname : Migration
+    public partial class serverdatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
